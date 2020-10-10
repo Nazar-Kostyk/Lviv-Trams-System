@@ -167,6 +167,24 @@ def change_route_success(start_stop, end_stop, tram, start_tram_direction, possi
 
     return None
 
+# Print result of the function need_change_tram_route()
+def print_for_need_change_tram_route(dict):
+    output = f'Start from {dict["start_stop"]} - '
+    output += f'tram №{dict["start_tram"]} '
+    output += f'[{dict["start_tram_stops_list"][-1]}].\n'
+    start_stop_index = dict["start_tram_stops_list"].index(dict["start_stop"])
+    change_stop_index = dict["start_tram_stops_list"].index(dict["change_stop"])
+    number_of_stops = change_stop_index - start_stop_index
+    output += f'Drive {number_of_stops} stops and hop off on {dict["change_stop"]}.\n'
+
+    output += f'Change tram to №{dict["change_tram"]} '
+    output += f'[{dict["change_tram_stops_list"][-1]}].\n'
+    change_stop_index = dict["change_tram_stops_list"].index(dict["change_stop"])
+    end_stop_index = dict["change_tram_stops_list"].index(dict["end_stop"])
+    number_of_stops = end_stop_index - change_stop_index
+    output += f'Drive {number_of_stops} stops and hop off on {dict["end_stop"]}.\n'
+    print(output, end="")
+
 def find_route(start_stop, end_stop, trams):
     solution = direct_tram_route_between_stops(start_stop, end_stop, trams)
     if solution:
