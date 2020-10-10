@@ -97,3 +97,87 @@ def change_route_success(start_stop, end_stop, tram, start_tram_direction, possi
                         continue
 
     return None
+
+def find_route(start_stop, end_stop, trams):
+    solution = direct_tram_route_between_stops(start_stop, end_stop, trams)
+    if solution:
+        print('Direct route')
+        print_for_direct_tram(solution)
+        return
+
+    res = need_change_tram_route(start_stop, end_stop, trams)
+    if res:
+        print('Need change tram route')
+        print_for_need_change_tram_route(res)
+        return
+
+# find trams which have stop X
+def trams_have_stop(stop_name, trams):
+    res = []
+    for tram in trams:
+        if stop_name in tram.all:
+            res.append(tram.name)
+
+    return res
+
+# check if stop_name is present in trams stops
+def stop_in_trams(stop_name, trams):
+    for tram in trams:
+        if stop_name in tram.all:
+            return True
+
+    return False
+
+trams = read_trams()
+trams.sort(key=lambda x:x.name)
+
+while (True):
+    print("1) find route between start_stop and end_stop")
+    print("2) find if there is direct tram between start_stop and end_stop")
+    print("3) find trams which has stop X")
+    print("4) close program")
+    choice = input()
+    if (choice == "1"):
+        start_stop = input('Enter start stop: ')
+        end_stop = input('Enter end stop: ')
+        if stop_in_trams(start_stop, trams) and stop_in_trams(end_stop, trams):
+            find_route(start_stop, end_stop, trams)
+        else:
+            if not stop_in_trams(start_stop, trams):
+                print(f'{start_stop} is not found in trams.')
+            if not stop_in_trams(end_stop, trams):
+                print(f'{end_stop} is not found in trams.')
+    elif (choice == "2"):
+        start_stop = input('Enter start stop: ')
+        end_stop = input('Enter end stop: ')
+        if stop_in_trams(start_stop, trams) and stop_in_trams(end_stop, trams):
+            print(f'Is there a direct route between {start_stop} and {end_stop}?')
+            solution = direct_tram_route_between_stops(start_stop, end_stop, trams)
+            if solution:
+                print('Yes')
+                print_for_direct_tram(solution)
+            else:
+                print('No')
+        else:
+            if not stop_in_trams(start_stop, trams):
+                print(f'{start_stop} is not found in trams.')
+            if not stop_in_trams(end_stop, trams):
+                print(f'{end_stop} is not found in trams.')
+    elif (choice == "3"):
+        stop_name = input('Enter stop: ')
+        if stop_in_trams(stop_name, trams):
+            res = trams_have_stop(stop_name, trams)
+            print("Tram № ", end="")
+            string = ""
+            for r in res[0:len(res)-1]:
+                string += r + ', '
+            print(string + res[-1])
+        else:
+            print(f'{stop_name} is not found in trams.')
+    elif (choice == "4"):
+        print("Goodbye")
+        break
+    else:
+        print("Wrong number entered, try again")
+    print()
+
