@@ -85,6 +85,16 @@ def direct_tram_route_between_stops(start_stop, end_stop, trams):
 
     return None
 
+# Print result of the function direct_tram_route_between_stops()
+def print_for_direct_tram(dict):
+    result = 'Tram №' + dict["tram_name"] + f' [{dict["tram_stops"][-1]}]' + '\n'
+    result += f'Start from {dict["start_stop"]} '
+    start_stop_index = dict["tram_stops"].index(dict["start_stop"])
+    end_stop_index = dict["tram_stops"].index(dict["end_stop"])
+    number_of_stops = end_stop_index - start_stop_index
+    result += f'drive {number_of_stops} stops and get of on {dict["end_stop"]}'
+    print(result)
+
 # Find if there is a tram route with hop off
 def need_change_tram_route(start_stop, end_stop, trams):
     for tram in trams:
