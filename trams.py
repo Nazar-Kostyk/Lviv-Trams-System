@@ -1,3 +1,62 @@
+import os
+
+# To store information about tram in system
+class Tram:
+    def __init__(self, name, forward, backward):
+        self.name = name
+        self.forward = forward
+        self.backward = backward
+        self.all = set(forward + backward)
+
+    def print_tram(self):
+        print(f'--- Tram №{self.name} ---')
+        print(f'Forward ({len(self.forward)}):')
+        for f in self.forward:
+            print("\t", f)
+        print()
+        print(f'Backward ({len(self.backward)}):')
+        for b in self.backward:
+            print("\t", b)
+        print()
+        print(f'All stations ({len(self.all)}):')
+        for a in self.all:
+            print("\t", a)
+
+        print()
+        difference = set(self.forward) - set(self.backward)
+        print(f'Forward - Backward ({len(difference)}):')
+        for d in difference:
+            print("\t", d)
+
+        print()
+        difference = set(self.backward) - set(self.forward)
+        print(f'Backward - Forward ({len(difference)}):')
+        for d in difference:
+            print("\t", d)
+# Read trams from files in data folder
+def read_trams():
+    trams = []
+    for root, dirs, files in os.walk(os.getcwd()):
+        for file in files:
+            if file.split('.')[1] == 'txt':
+                with open(os.path.join(root, file)) as f:
+                    tram_name = file.split('_')[0]
+                    forward = []
+                    backward = []
+                    forward_direction = True
+                    for line in f:
+                        if("Зворотний" in line):
+                            forward_direction = False
+                            continue
+                        if forward_direction:
+                            forward.append(line.strip("\n"))
+                        else:
+                            backward.append(line.strip("\n"))
+
+                    trams.append(Tram(tram_name, forward, backward))
+
+    return trams
+
 # Find direct route between start_stop and end_stop
 # If not found return None
 def direct_tram_route_between_stops(start_stop, end_stop, trams):
@@ -180,4 +239,3 @@ while (True):
     else:
         print("Wrong number entered, try again")
     print()
-
